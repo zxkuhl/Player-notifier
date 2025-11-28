@@ -1,0 +1,33 @@
+-- Player Notifier Script (Standalone)
+
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+
+local function Notify(title, text)
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = text,
+            Duration = 5
+        })
+    end)
+end
+
+-- Player Joined
+Players.PlayerAdded:Connect(function(plr)
+    Notify("Player Joined", plr.Name .. " has joined the game.")
+end)
+
+-- Player Leaving
+Players.PlayerRemoving:Connect(function(plr)
+    Notify("Player Leaving", plr.Name .. " has left the game.")
+end)
+
+-- Detect Kick/Ban (client-side approximation)
+Players.LocalPlayer.ChildRemoved:Connect(function(child)
+    if child.Name == "PlayerGui" then
+        Notify("Warning", "You may have been kicked or disconnected.")
+    end
+end)
+
+return true
